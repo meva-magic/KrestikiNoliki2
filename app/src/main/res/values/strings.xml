@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">KrestikiNoliki</string>
-    <string name="app_name_full">TIC TAC TOE</string>
+    <string name="app_name_full">TIC\nTAC\nTOE</string>
     <string name="new_game">NEW GAME</string>
     <string name="settings">SETTINGS</string>
     <string name="statistics">STATISTICS</string>
@@ -30,7 +30,7 @@
     <string name="player_o_hint">Player O name</string>
     <string name="start_game">START GAME</string>
     <string name="results">Results</string>
-    <string name="start_again">Play Again</string>
+    <string name="start_again">PLAY AGAIN</string>
     <string name="made_move">made a move</string>
     <string name="won">won!</string>
     <string name="draw">Draw!</string>

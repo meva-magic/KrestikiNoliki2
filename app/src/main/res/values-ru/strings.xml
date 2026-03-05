@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">КрестикиНолики</string>
-    <string name="app_name_full">КРЕСТИКИ-НОЛИКИ</string>
+    <string name="app_name_full">КРЕСТИКИ\nНОЛИКИ</string>
     <string name="new_game">НОВАЯ ИГРА</string>
     <string name="settings">НАСТРОЙКИ</string>
     <string name="statistics">СТАТИСТИКА</string>
@@ -30,7 +30,7 @@
     <string name="player_o_hint">Имя игрока O</string>
     <string name="start_game">НАЧАТЬ ИГРУ</string>
     <string name="results">Результат</string>
-    <string name="start_again">Заново</string>
+    <string name="start_again">ЗАНОВО</string>
     <string name="made_move">сделал ход</string>
     <string name="won">победил!</string>
     <string name="draw">Ничья!</string>

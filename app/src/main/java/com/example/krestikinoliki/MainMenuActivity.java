@@ -11,12 +11,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import java.util.Locale;
 
 public class MainMenuActivity extends AppCompatActivity {
 
     private SharedPreferences prefs;
     private SoundManager soundManager;
+    private TextView titleText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +29,14 @@ public class MainMenuActivity extends AppCompatActivity {
         soundManager = SoundManager.getInstance(this);
         prefs = getSharedPreferences("game_settings", MODE_PRIVATE);
 
+        titleText = findViewById(R.id.titleText);
         Button btnNewGame = findViewById(R.id.btnNewGame);
         Button btnSettings = findViewById(R.id.btnSettings);
         Button btnStatistics = findViewById(R.id.btnStatistics);
         Button btnExit = findViewById(R.id.btnExit);
+
+        // Обновляем текст заголовка
+        updateTitleText();
 
         btnNewGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,9 +74,31 @@ public class MainMenuActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // При возврате в главное меню перезагружаем язык
+        loadLanguage();
+        updateTitleText();
+        if (soundManager != null) {
+            soundManager.updateSettings();
+            soundManager.startBackgroundMusic();
+        }
+    }
+
+    private void updateTitleText() {
+        if (titleText != null) {
+            titleText.setText(getString(R.string.app_name_full));
+        }
+    }
+
     private void loadLanguage() {
         SharedPreferences prefs = getSharedPreferences("game_settings", MODE_PRIVATE);
         String languageCode = prefs.getString("language", "ru");
+        setLocale(languageCode);
+    }
+
+    private void setLocale(String languageCode) {
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
         Resources resources = getResources();
@@ -84,15 +112,6 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onPause();
         if (soundManager != null) {
             soundManager.pauseBackgroundMusic();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (soundManager != null) {
-            soundManager.updateSettings();
-            soundManager.startBackgroundMusic();
         }
     }
 

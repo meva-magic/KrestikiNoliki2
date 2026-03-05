@@ -45,10 +45,11 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.makeText(SettingsActivity.this,
                         isChecked ? getString(R.string.sound) + " on" : getString(R.string.sound) + " off", Toast.LENGTH_SHORT).show());
 
+        // Язык меняется сразу при выборе
         radioGroupLanguage.setOnCheckedChangeListener((group, checkedId) -> {
-            String lang = (checkedId == R.id.radioLangRu) ? "ru" : "en";
-            Toast.makeText(SettingsActivity.this,
-                    "Language: " + lang, Toast.LENGTH_SHORT).show();
+            String languageCode = (checkedId == R.id.radioLangRu) ? "ru" : "en";
+            setLocale(languageCode);
+            recreate(); // Пересоздаем активность для применения языка
         });
 
         int currentVolume = (int)(prefs.getFloat("music_volume", 0.5f) * 100);
@@ -70,11 +71,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         btnSave.setOnClickListener(v -> {
             saveSettings();
-
-            int selectedLangId = radioGroupLanguage.getCheckedRadioButtonId();
-            String languageCode = (selectedLangId == R.id.radioLangRu) ? "ru" : "en";
-            setLocale(languageCode);
-
             Toast.makeText(SettingsActivity.this,
                     getString(R.string.save), Toast.LENGTH_SHORT).show();
             finish();
@@ -114,5 +110,8 @@ public class SettingsActivity extends AppCompatActivity {
         Configuration config = resources.getConfiguration();
         config.setLocale(locale);
         resources.updateConfiguration(config, resources.getDisplayMetrics());
+
+        // Сохраняем выбранный язык
+        prefs.edit().putString("language", languageCode).apply();
     }
 }

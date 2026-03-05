@@ -5,26 +5,25 @@
     android:layout_height="match_parent"
     android:background="@color/teal_200"
     android:orientation="vertical"
-    android:paddingTop="70dp"
+    android:paddingTop="100dp"
     android:paddingBottom="40dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginBottom="20dp"
         android:gravity="center"
         android:text="@string/settings"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="32sp"
         android:textStyle="bold" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="@dimen/radius_large"
         app:cardElevation="10dp"
@@ -32,10 +31,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center_vertical"
-            android:padding="@dimen/margin_xlarge">
+            android:padding="25dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -44,17 +42,16 @@
                 android:textColor="@color/lavender"
                 android:textSize="@dimen/text_size_large"
                 android:textStyle="bold"
-                android:layout_marginBottom="@dimen/margin_small" />
+                android:layout_marginBottom="8dp" />
 
             <Switch
                 android:id="@+id/settingsSoundSwitch"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/switch_height"
+                android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/sound"
                 android:textSize="@dimen/text_size_medium"
-                android:layout_marginBottom="@dimen/margin_large"
-                android:paddingVertical="@dimen/margin_small" />
+                android:layout_marginBottom="15dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -63,16 +60,15 @@
                 android:textColor="@color/lavender"
                 android:textSize="@dimen/text_size_large"
                 android:textStyle="bold"
-                android:layout_marginBottom="@dimen/margin_small" />
+                android:layout_marginBottom="8dp" />
 
             <SeekBar
                 android:id="@+id/volumeSeekBar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/seekbar_height"
+                android:layout_height="wrap_content"
                 android:max="100"
                 android:progress="50"
-                android:layout_marginBottom="@dimen/margin_large"
-                android:paddingVertical="@dimen/margin_small" />
+                android:layout_marginBottom="15dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -81,33 +77,34 @@
                 android:textColor="@color/lavender"
                 android:textSize="@dimen/text_size_large"
                 android:textStyle="bold"
-                android:layout_marginBottom="@dimen/margin_small" />
+                android:layout_marginBottom="8dp" />
 
             <RadioGroup
                 android:id="@+id/radioGroupLanguage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/margin_medium">
+                android:layout_marginBottom="5dp">
 
                 <RadioButton
                     android:id="@+id/radioLangRu"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:checked="true"
-                    android:padding="@dimen/margin_small"
+                    android:padding="5dp"
                     android:text="Русский"
-                    android:textSize="@dimen/text_size_medium" />
+                    android:textSize="@dimen/text_size_medium"
+                    android:gravity="center" />
 
                 <RadioButton
                     android:id="@+id/radioLangEn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="@dimen/margin_small"
+                    android:padding="5dp"
                     android:text="English"
-                    android:textSize="@dimen/text_size_medium" />
+                    android:textSize="@dimen/text_size_medium"
+                    android:gravity="center" />
             </RadioGroup>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -115,7 +112,7 @@
     <Button
         android:id="@+id/btnSaveSettings"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
+        android:layout_height="55dp"
         android:background="@drawable/button_green_shadow"
         android:gravity="center"
         android:text="@string/save"

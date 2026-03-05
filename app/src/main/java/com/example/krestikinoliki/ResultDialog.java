@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -22,7 +23,13 @@ public class ResultDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_result_dialog);
+
+        // Устанавливаем прозрачный фон диалога
+        if (getWindow() != null) {
+            getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
 
         TextView messageText = findViewById(R.id.messageText);
         Button startAgainButton = findViewById(R.id.startAgainButton);
