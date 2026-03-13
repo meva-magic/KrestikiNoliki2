@@ -1,9 +1,9 @@
 package com.example.krestikinoliki;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private TextView playerOneName, playerTwoName;
     private LinearLayout playerOneLayout, playerTwoLayout;
@@ -29,6 +29,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initUI();
+        initCombinations();
+
+        String getPlayerOneName = getIntent().getStringExtra("playerOne");
+        String getPlayerTwoName = getIntent().getStringExtra("playerTwo");
+
+        setPlayerNames(getPlayerOneName, getPlayerTwoName);
+        setupExitButton();
+        setClickListeners();
+        updatePlayerTurnIndicator();
+    }
+
+    private void initUI() {
         playerOneName = findViewById(R.id.playerOneName);
         playerTwoName = findViewById(R.id.playerTwoName);
         playerOneLayout = findViewById(R.id.playerOneLayout);
@@ -46,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
         image7 = findViewById(R.id.image7);
         image8 = findViewById(R.id.image8);
         image9 = findViewById(R.id.image9);
+    }
 
+    private void initCombinations() {
         combinationList.add(new int[] {0,1,2});
         combinationList.add(new int[] {3,4,5});
         combinationList.add(new int[] {6,7,8});
@@ -55,19 +70,20 @@ public class MainActivity extends AppCompatActivity {
         combinationList.add(new int[] {2,5,8});
         combinationList.add(new int[] {2,4,6});
         combinationList.add(new int[] {0,4,8});
+    }
 
-        String getPlayerOneName = getIntent().getStringExtra("playerOne");
-        String getPlayerTwoName = getIntent().getStringExtra("playerTwo");
-
-        if (getPlayerOneName != null && !getPlayerOneName.isEmpty()) {
-            playerOneName.setText(getPlayerOneName);
+    private void setPlayerNames(String name1, String name2) {
+        if (name1 != null && !name1.isEmpty()) {
+            playerOneName.setText(name1);
         }
-
-        if (getPlayerTwoName != null && !getPlayerTwoName.isEmpty()) {
-            playerTwoName.setText(getPlayerTwoName);
+        if (name2 != null && !name2.isEmpty()) {
+            playerTwoName.setText(name2);
         }
+    }
 
+    private void setupExitButton() {
         btnExitToMenu.setOnClickListener(v -> {
+            soundManager.playClickSound();
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle(R.string.exit_to_menu);
             builder.setMessage(R.string.exit_confirm);
@@ -80,9 +96,6 @@ public class MainActivity extends AppCompatActivity {
             builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
             builder.show();
         });
-
-        setClickListeners();
-        updatePlayerTurnIndicator();
     }
 
     private void setClickListeners() {
@@ -116,9 +129,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void performAction(ImageView imageView, int selectedBoxPosition) {
-        boxPositions[selectedBoxPosition] = playerTurn;
+        // Звук нажатия уже есть в SoundManager, но добавим и здесь для надежности
+        soundManager.playClickSound();
 
-        SoundManager.getInstance().playClickSound();
+        boxPositions[selectedBoxPosition] = playerTurn;
 
         String playerName = (playerTurn == 1) ?
                 playerOneName.getText().toString() :

@@ -1,8 +1,6 @@
 package com.example.krestikinoliki;
 
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,10 +9,8 @@ import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.SeekBar;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
-import java.util.Locale;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
 
     private Switch soundSwitch;
     private RadioGroup radioGroupLanguage;
@@ -22,7 +18,6 @@ public class SettingsActivity extends AppCompatActivity {
     private SeekBar volumeSeekBar;
     private Button btnSave;
     private SharedPreferences prefs;
-    private SoundManager soundManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +25,6 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         prefs = getSharedPreferences("game_settings", MODE_PRIVATE);
-        soundManager = SoundManager.getInstance(this);
 
         soundSwitch = findViewById(R.id.settingsSoundSwitch);
         radioGroupLanguage = findViewById(R.id.radioGroupLanguage);
@@ -41,24 +35,27 @@ public class SettingsActivity extends AppCompatActivity {
 
         loadSettings();
 
-        soundSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
-                Toast.makeText(SettingsActivity.this,
-                        isChecked ? getString(R.string.sound) + " on" : getString(R.string.sound) + " off", Toast.LENGTH_SHORT).show());
-
-        // Язык меняется сразу при выборе
-        radioGroupLanguage.setOnCheckedChangeListener((group, checkedId) -> {
-            String languageCode = (checkedId == R.id.radioLangRu) ? "ru" : "en";
-            setLocale(languageCode);
-            recreate(); // Пересоздаем активность для применения языка
+        soundSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Сохраняем и применяем изменения сразу
+            prefs.edit().putBoolean("sound_enabled", isChecked).apply();
+            soundManager.updateSettings();
+            Toast.makeText(SettingsActivity.this,
+                    isChecked ? getString(R.string.sound) + " on" : getString(R.string.sound) + " off",
+                    Toast.LENGTH_SHORT).show();
         });
 
-        int currentVolume = (int)(prefs.getFloat("music_volume", 0.5f) * 100);
-        volumeSeekBar.setProgress(currentVolume);
+        radioGroupLanguage.setOnCheckedChangeListener((group, checkedId) -> {
+            String languageCode = (checkedId == R.id.radioLangRu) ? "ru" : "en";
+            prefs.edit().putString("language", languageCode).apply();
+            setLocale(languageCode);
+            recreate();
+        });
 
         volumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float volume = progress / 100f;
+                prefs.edit().putFloat("music_volume", volume).apply();
                 soundManager.setMusicVolume(volume);
             }
 
@@ -70,6 +67,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         btnSave.setOnClickListener(v -> {
+            soundManager.playClickSound();
             saveSettings();
             Toast.makeText(SettingsActivity.this,
                     getString(R.string.save), Toast.LENGTH_SHORT).show();
@@ -86,6 +84,9 @@ public class SettingsActivity extends AppCompatActivity {
         } else {
             radioLangEn.setChecked(true);
         }
+
+        int volume = (int)(prefs.getFloat("music_volume", 0.5f) * 100);
+        volumeSeekBar.setProgress(volume);
     }
 
     private void saveSettings() {
@@ -98,20 +99,6 @@ public class SettingsActivity extends AppCompatActivity {
         editor.putFloat("music_volume", volumeSeekBar.getProgress() / 100f);
         editor.apply();
 
-        if (soundManager != null) {
-            soundManager.updateSettings();
-        }
-    }
-
-    private void setLocale(String languageCode) {
-        Locale locale = new Locale(languageCode);
-        Locale.setDefault(locale);
-        Resources resources = getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
-
-        // Сохраняем выбранный язык
-        prefs.edit().putString("language", languageCode).apply();
+        soundManager.updateSettings();
     }
 }

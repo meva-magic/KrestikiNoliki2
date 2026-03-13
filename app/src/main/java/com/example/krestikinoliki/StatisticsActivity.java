@@ -8,9 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
 
-public class StatisticsActivity extends AppCompatActivity {
+public class StatisticsActivity extends BaseActivity {
 
     private TextView statsXWins, statsOWins, statsDraws;
     private Button btnReset, btnShare, btnBack;
@@ -33,7 +32,7 @@ public class StatisticsActivity extends AppCompatActivity {
         loadStatistics();
 
         btnReset.setOnClickListener(v -> {
-            SoundManager.getInstance().playClickSound();
+            soundManager.playClickSound();
             AlertDialog.Builder builder = new AlertDialog.Builder(StatisticsActivity.this);
             builder.setTitle(R.string.reset_stats);
             builder.setMessage(R.string.reset_confirm);
@@ -49,12 +48,12 @@ public class StatisticsActivity extends AppCompatActivity {
         });
 
         btnShare.setOnClickListener(v -> {
-            SoundManager.getInstance().playClickSound();
+            soundManager.playClickSound();
             shareStatistics();
         });
 
         btnBack.setOnClickListener(v -> {
-            SoundManager.getInstance().playClickSound();
+            soundManager.playClickSound();
             finish();
         });
     }

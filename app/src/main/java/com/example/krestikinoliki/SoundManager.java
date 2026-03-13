@@ -16,6 +16,7 @@ public class SoundManager {
     private boolean isSoundEnabled = true;
     private float musicVolume = 0.5f;
     private float soundVolume = 0.5f;
+    private int activeActivities = 0; // счетчик активных активностей
 
     private SoundManager(Context context) {
         this.context = context.getApplicationContext();
@@ -31,7 +32,11 @@ public class SoundManager {
                 .setAudioAttributes(audioAttributes)
                 .build();
 
-        clickSoundId = soundPool.load(context, R.raw.click_sound, 1);
+        try {
+            clickSoundId = soundPool.load(context, R.raw.click_sound, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static synchronized SoundManager getInstance(Context context) {
@@ -56,29 +61,41 @@ public class SoundManager {
     public void updateSettings() {
         loadSettings();
         if (mediaPlayer != null) {
-            if (isMusicEnabled) {
-                mediaPlayer.setVolume(musicVolume, musicVolume);
-                if (!mediaPlayer.isPlaying()) {
-                    mediaPlayer.start();
-                }
-            } else {
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                }
-            }
+            mediaPlayer.setVolume(isMusicEnabled ? musicVolume : 0,
+                    isMusicEnabled ? musicVolume : 0);
         }
     }
 
-    public void startBackgroundMusic() {
+    // Вызывается при старте каждой активности
+    public void onActivityStart() {
+        activeActivities++;
+        if (activeActivities == 1) {
+            // Первая активность - запускаем музыку
+            startBackgroundMusic();
+        }
+    }
+
+    // Вызывается при остановке каждой активности
+    public void onActivityStop() {
+        activeActivities--;
+        if (activeActivities == 0) {
+            // Нет активных активностей - ставим музыку на паузу
+            pauseBackgroundMusic();
+        }
+    }
+
+    private void startBackgroundMusic() {
         if (mediaPlayer == null) {
             try {
                 mediaPlayer = MediaPlayer.create(context, R.raw.background_music);
                 if (mediaPlayer != null) {
                     mediaPlayer.setLooping(true);
-                    mediaPlayer.setVolume(isMusicEnabled ? musicVolume : 0, isMusicEnabled ? musicVolume : 0);
+                    mediaPlayer.setVolume(isMusicEnabled ? musicVolume : 0,
+                            isMusicEnabled ? musicVolume : 0);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                return;
             }
         }
 
@@ -102,7 +119,7 @@ public class SoundManager {
     }
 
     public void playClickSound() {
-        if (isSoundEnabled && soundPool != null) {
+        if (isSoundEnabled && soundPool != null && clickSoundId != 0) {
             soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1);
         }
     }
@@ -110,7 +127,8 @@ public class SoundManager {
     public void setMusicVolume(float volume) {
         this.musicVolume = volume;
         if (mediaPlayer != null) {
-            mediaPlayer.setVolume(isMusicEnabled ? volume : 0, isMusicEnabled ? volume : 0);
+            mediaPlayer.setVolume(isMusicEnabled ? volume : 0,
+                    isMusicEnabled ? volume : 0);
         }
     }
 

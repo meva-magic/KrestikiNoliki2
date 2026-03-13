@@ -1,13 +1,12 @@
 package com.example.krestikinoliki;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class AddPlayers extends AppCompatActivity {
+public class AddPlayers extends BaseActivity {
 
     private EditText playerOne, playerTwo;
     private Button startGameButton, btnBack;
@@ -25,7 +24,7 @@ public class AddPlayers extends AppCompatActivity {
         startGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SoundManager.getInstance().playClickSound();
+                soundManager.playClickSound();
                 String getPlayerOneName = playerOne.getText().toString().trim();
                 String getPlayerTwoName = playerTwo.getText().toString().trim();
 
@@ -44,7 +43,7 @@ public class AddPlayers extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SoundManager.getInstance().playClickSound();
+                soundManager.playClickSound();
                 finish();
             }
         });

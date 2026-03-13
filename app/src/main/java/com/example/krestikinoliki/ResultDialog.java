@@ -26,7 +26,6 @@ public class ResultDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_result_dialog);
 
-        // Устанавливаем прозрачный фон диалога
         if (getWindow() != null) {
             getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
@@ -34,21 +33,17 @@ public class ResultDialog extends Dialog {
         TextView messageText = findViewById(R.id.messageText);
         Button startAgainButton = findViewById(R.id.startAgainButton);
 
-        if (messageText != null) {
-            messageText.setText(message);
-        }
+        messageText.setText(message);
 
-        if (startAgainButton != null) {
-            startAgainButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SoundManager.getInstance().playClickSound();
-                    if (mainActivity != null) {
-                        mainActivity.restartMatch();
-                    }
-                    dismiss();
+        startAgainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SoundManager.getInstance().playClickSound();
+                if (mainActivity != null) {
+                    mainActivity.restartMatch();
                 }
-            });
-        }
+                dismiss();
+            }
+        });
     }
 }
